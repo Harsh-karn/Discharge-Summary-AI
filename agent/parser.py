@@ -124,14 +124,26 @@ SCHEMA:
 }
 """
             
-            response = self.client.models.generate_content(
-                model='gemini-2.5-pro',
-                contents=[uploaded_file, prompt],
-                config=types.GenerateContentConfig(
-                    response_mime_type="application/json",
-                    temperature=0.0
-                )
-            )
+            import time
+            max_retries = 3
+            response = None
+            for attempt in range(max_retries):
+                try:
+                    response = self.client.models.generate_content(
+                        model='gemini-2.5-pro',
+                        contents=[uploaded_file, prompt],
+                        config=types.GenerateContentConfig(
+                            response_mime_type="application/json",
+                            temperature=0.0
+                        )
+                    )
+                    break
+                except Exception as e:
+                    if "429" in str(e) and attempt < max_retries - 1:
+                        print(f"[PARSER] Rate limit hit. Waiting 65s for quota reset (Attempt {attempt+1}/{max_retries})...")
+                        time.sleep(65)
+                    else:
+                        raise e
             
             print("[PARSER] OCR Extraction complete. Cleaning up uploaded file.")
             self.client.files.delete(name=uploaded_file.name)

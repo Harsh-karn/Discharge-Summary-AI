@@ -313,7 +313,9 @@ function renderDischargeDraft(draft, isBaseline) {
   });
   
   document.getElementById("draft-allergies").value = draft.allergies;
-  document.getElementById("draft-pending").value = draft.pending_results.join(", ");
+  document.getElementById("draft-pending").value = (draft.pending_results || []).join(", ");
+  document.getElementById("draft-discharge-condition").value = draft.discharge_condition || "[MISSING - CLINICIAN REVIEW REQUIRED]";
+  document.getElementById("draft-follow-up").value = (draft.follow_up_instructions || []).join("; ");
   
   currentDraft = draft;
 }
@@ -402,7 +404,7 @@ async function submitClinicianEdits() {
     const response = await fetch(`${API_BASE}/submit_corrections`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: json.dumps(payload)
+      body: JSON.stringify(payload)
     });
     
     const result = await response.json();
@@ -515,7 +517,9 @@ function simulateOfflineAgent() {
       "procedures_done": localData.procedures.map(p => p.procedure || "Catheterization done"),
       "allergies": "Not Known",
       "discharge_medications": finalMeds,
+      "follow_up_instructions": localData.follow_up_instructions ? localData.follow_up_instructions.stated : ["Review in OPD after 15 days"],
       "pending_results": localData.follow_up_instructions.pending_results,
+      "discharge_condition": localData.hospital_course ? localData.hospital_course.discharge_condition : "Stable",
       "reconciliation_flags": finalFlags,
       "interaction_alerts": memorySaved ? [] : [
         {

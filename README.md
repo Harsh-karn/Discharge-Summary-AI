@@ -69,7 +69,7 @@ We enforce the **No-Fabrication Policy** using the following multi-layer guardra
 ## 3. Conflict & Failure Handling
 
 * **Conflicting Information**: If two clinical documents disagree (e.g., Page 1 discharge sheet states past history of "Thyroid disorder", whereas the admission case file on Page 46 records "Type 2 Diabetes Mellitus on Ayurvedic medication"), the agent **does not pick one**. It lists the conflict prominently under `history_conflict_flag` and details the mismatch for the reviewing clinician.
-* **Fault-Tolerant File Parsing**: The PDF ingestion parser (`agent/parser.py`) uses a dual-stage pipeline. If standard layout text extraction fails or local OCR dependencies (like Tesseract) are absent, it falls back to our high-fidelity pre-compiled JSON database representing the OCR-parsed charts, guaranteeing zero crashes.
+* **Fault-Tolerant File Parsing**: The PDF ingestion parser (`agent/parser.py`) uploads the full patient PDF to the Gemini API for high-fidelity OCR extraction of scanned handwriting and complex clinical layouts, converting them directly into structured JSON. Extracted results are cached locally by file hash to avoid redundant API calls. If the API key is absent or the extraction fails, it falls back to a safe-refusal placeholder flagging the data as unreadable.
 * **Step Control & Timeouts**: If the loop exceeds the 8-step threshold, it triggers a clean recovery path, compiles the safe-refusal draft, and exits without freezing.
 
 ---

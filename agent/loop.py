@@ -66,7 +66,9 @@ class ClinicalAgentLoop:
           "procedures_done": [],
           "allergies": "Not Known",
           "discharge_medications": [],
+          "follow_up_instructions": ["[MISSING - CLINICIAN REVIEW REQUIRED]"],
           "pending_results": [],
+          "discharge_condition": "[MISSING - CLINICIAN REVIEW REQUIRED]",
           "reconciliation_flags": [],
           "interaction_alerts": [],
           "history_conflict_flag": False,
@@ -104,6 +106,7 @@ CRITICAL CLINICAL RULES (NO FABRICATION):
 2. Handle Conflicting Info: If two notes disagree, flag it! Do not arbitrarily pick one. Set 'history_conflict_flag' to true in the final draft.
 3. Medication Reconciliation: Compare admission and discharge medications. If a medication (like Diabetes management insulin) is dropped without reason, or if a medication name is truncated (e.g. "TAB. ENTR("), flag it under 'reconciliation_flags'.
 4. Truncated drugs MUST be flagged, DO NOT guess their full name unless clinician memory corrects it!
+5. CLINICIAN MEMORY OVERRIDE: If 'query_clinician_memory' returns specific corrections for a patient (like resolving a truncated drug to "ENTEROGERMINA" or adding "METFORMIN"), you MUST apply those corrections to your final_draft. If a memory correction resolves an issue, DO NOT flag it in reconciliation_flags.
 
 AVAILABLE TOOLS:
 - 'get_patient_record': Inputs: {"pdf_path": "<path>"} -> Returns parsed patient data.
@@ -130,7 +133,9 @@ When finished, set "is_final": true, "tool_chosen": null, and populate "final_dr
   "procedures_done": [],
   "allergies": "",
   "discharge_medications": [{"name": "", "dosage": "", "frequency": "", "duration": "", "reason": ""}],
+  "follow_up_instructions": ["string"],
   "pending_results": [],
+  "discharge_condition": "",
   "reconciliation_flags": [{"severity": "", "type": "", "item": "", "description": ""}],
   "interaction_alerts": [{"severity": "", "interaction": "", "description": ""}],
   "history_conflict_flag": boolean,
@@ -139,7 +144,7 @@ When finished, set "is_final": true, "tool_chosen": null, and populate "final_dr
 """
 
         messages = [
-            {"role": "user", "content": f"Begin processing patient file: {pdf_path}. Output the first step JSON."}
+            {"role": "user", "parts": [{"text": f"Begin processing patient file: {pdf_path}. Output the first step JSON."}]}
         ]
         
         step_count = 0
@@ -150,15 +155,30 @@ When finished, set "is_final": true, "tool_chosen": null, and populate "final_dr
                 step_count += 1
                 print(f"[AGENT] Step {step_count}...")
                 
-                # Make LLM Call
-                response = self.client.models.generate_content(
-                    model="gemini-2.5-pro",
-                    contents=[system_instruction] + messages,
-                    config=types.GenerateContentConfig(
-                        response_mime_type="application/json",
-                        temperature=0.0
-                    )
-                )
+                # Make LLM Call with Retry for Rate Limits
+                import time
+                max_retries = 3
+                for attempt in range(max_retries):
+                    try:
+                        response = self.client.models.generate_content(
+                            model="gemini-2.5-pro",
+                            contents=messages,
+                            config=types.GenerateContentConfig(
+                                system_instruction=system_instruction,
+                                response_mime_type="application/json",
+                                temperature=0.0
+                            )
+                        )
+                        break # Success
+                    except Exception as e:
+                        if "429" in str(e) and attempt < max_retries - 1:
+                            print(f"[AGENT] Rate limit hit. Waiting 65s for quota reset (Attempt {attempt+1}/{max_retries})...")
+                            time.sleep(65)
+                        else:
+                            raise e
+                
+                # Throttle to prevent hitting the 15 Requests Per Minute limit (~1 request every 4 seconds)
+                time.sleep(4)
                 
                 response_text = response.text
                 
@@ -220,8 +240,8 @@ When finished, set "is_final": true, "tool_chosen": null, and populate "final_dr
                 trace.append(trace_entry)
                 
                 # Append LLM's own response and the tool's result to conversation
-                messages.append({"role": "model", "content": response_text})
-                messages.append({"role": "user", "content": f"Tool Result: {tool_result}\nNow provide the next step JSON."})
+                messages.append({"role": "model", "parts": [{"text": response_text}]})
+                messages.append({"role": "user", "parts": [{"text": f"Tool Result: {tool_result}\nNow provide the next step JSON."}]})
             
             # If loop ends without finalizing
             return self._compile_timeout(trace)
