@@ -1,10 +1,10 @@
 import os
 import json
 import urllib.parse
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 from agent.loop import ClinicalAgentLoop
 
-class ClinicalAgentAPIHandler(BaseHTTPRequestHandler):
+class ClinicalAgentAPIHandler(SimpleHTTPRequestHandler):
     """
     Standard HTTP Request Handler for the Clinical Summarization Agent API.
     Zero-dependencies ensures instant startup on the host system without pip failures.
@@ -40,8 +40,7 @@ class ClinicalAgentAPIHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps({"status": "SUCCESS", "message": "Correction memory reset successfully."}).encode("utf-8"))
             
         else:
-            self._set_headers("text/plain", 404)
-            self.wfile.write(b"Endpoint not found.")
+            super().do_GET()
 
     def do_POST(self):
         """Handles POST requests for running the agent loop and submitting clinician edits."""

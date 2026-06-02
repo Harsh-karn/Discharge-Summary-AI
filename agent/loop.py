@@ -161,7 +161,7 @@ When finished, set "is_final": true, "tool_chosen": null, and populate "final_dr
                 for attempt in range(max_retries):
                     try:
                         response = self.client.models.generate_content(
-                            model="gemini-2.5-pro",
+                            model="gemini-2.0-flash",
                             contents=messages,
                             config=types.GenerateContentConfig(
                                 system_instruction=system_instruction,

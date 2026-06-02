@@ -130,7 +130,7 @@ SCHEMA:
             for attempt in range(max_retries):
                 try:
                     response = self.client.models.generate_content(
-                        model='gemini-2.5-pro',
+                        model='gemini-2.0-flash',
                         contents=[uploaded_file, prompt],
                         config=types.GenerateContentConfig(
                             response_mime_type="application/json",
