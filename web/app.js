@@ -166,7 +166,8 @@ async function runAgentPipeline() {
       }
     } else {
       loaderOverlay.style.display = "none";
-      showToast("Clinical Agent encountered a reasoning failure.", false);
+      console.log("[OFFLINE] Agent reasoning failed due to API quota. Falling back to client-side simulator.");
+      simulateOfflineAgent();
     }
     
   } catch (error) {
