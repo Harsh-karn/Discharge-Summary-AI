@@ -1,0 +1,299 @@
+{
+  "patient_id": "patient_2",
+  "metadata": {
+    "total_pages": 71,
+    "ingested_date": "2026-06-02"
+  },
+  "demographics": {
+    "name": "Jane Doe",
+    "age": "54",
+    "gender": "Female",
+    "weight": "71 kg",
+    "mrn": "MRN-998241"
+  },
+  "dates": {
+    "admission_date": "2026-02-26",
+    "discharge_date": "2026-03-02"
+  },
+  "diagnoses": {
+    "stated_discharge_diagnoses": [
+      "ACUTE GASTROENTERITIS WITH DEHYDRATION",
+      "URINARY TRACT INFECTION"
+    ],
+    "unclassified_or_omitted_diagnoses": [
+      {
+        "diagnosis": "Diabetic Ketoacidosis (DKA)",
+        "source": "ER Observation Chart (Page 3) & Consultation Sheet (Page 54)",
+        "evidence": "Blood Glucose 443 mg/dL, Ketones present in urine, pH 7.39, Actrapid insulin sliding scale initiated."
+      },
+      {
+        "diagnosis": "Uncontrolled Type 2 Diabetes Mellitus",
+        "source": "Case Record / Admission Record (Page 46)",
+        "evidence": "Known case of T2DM on Ayurvedic medication, HbA1c 13.9% on outside report, multiple blood sugar spikes over 300 mg/dL during stay."
+      },
+      {
+        "diagnosis": "Bilateral Pyelonephritis",
+        "source": "Plain CT KUB (Page 41) & USG Abdomen & Pelvis (Page 31)",
+        "evidence": "CT KUB shows perinephric fat plane stranding and bilateral pararenal thickening suggestive of pyelonephritis."
+      }
+    ]
+  },
+  "past_medical_history": {
+    "stated_on_discharge_sheet": "K/C/O Thyroid disorder on treatment.",
+    "stated_on_admission_sheet": "K/C/O T2DM (Type 2 Diabetes Mellitus) on Ayurvedic Medication (HbA1c - 13.9% outside report). No mention of Thyroid disorder.",
+    "conflict_detected": true
+  },
+  "admission_vitals": {
+    "pulse": "116 bpm",
+    "bp": "87/50 mmHg (Hypotension)",
+    "temp": "98 F",
+    "rr": "22 breaths/min",
+    "spo2": "98% on room air",
+    "grbs": "443 mg/dL"
+  },
+  "hospital_course": {
+    "er_management": "Presented on 2026-02-26 at 6:40 PM. Managed for DKA and hypotension with 2L Normal Saline bolus, IV Pantoprazole 40mg, and IV Emeset 4mg. Transferred to ward/ICU.",
+    "inpatient_treatment": "Treated with IV antibiotics (Inj. Meropenem 1gm TDS), IV PPIs (Inj. Pantocid), IV antiemetics (Inj. Emeset), IV fluids (NS/RL at 150ml/hr), and sliding scale insulin. Episode of chills and fever spike of 103F occurred on night of 27/2/26, managed with Inj. PCT 1gm. Urinary catheterization done with Foley's catheter, inserted 27/2/26 and removed 1/3/26 at 7:45 AM. Repeat creatinine normalized to 1.17 mg/dL on discharge advice notes. Attenders requested discharge against advice for further management.",
+    "discharge_condition": "Hemodynamically stable"
+  },
+  "procedures": [
+    {
+      "procedure": "IV Cannulization",
+      "date": "2026-02-26",
+      "site": "Left hand 20G"
+    },
+    {
+      "procedure": "Foley's Catheterization",
+      "date_inserted": "2026-02-27",
+      "date_removed": "2026-03-01 07:45 AM",
+      "details": "Inserted by Mohan, removed 1/3/26."
+    },
+    {
+      "procedure": "Ultrasonography (USG) Abdomen & Pelvis",
+      "date": "2026-02-27",
+      "findings": "Mild hepatomegaly with grade I fatty infiltration. Cholelithiasis without cholecystitis. Mildly bulky kidneys, pyelonephritis correlation suggested. Minimal ascites."
+    },
+    {
+      "procedure": "Plain CT KUB",
+      "date": "2026-02-27",
+      "findings": "Bilateral pyelonephritis features. Tiny left renal calyceal calculus. Hepatomegaly. Cholelithiasis."
+    },
+    {
+      "procedure": "2D Echocardiography",
+      "date": "2026-02-27",
+      "findings": "LVEF 60%. Normal LV systolic function. Mild TR, trivial AR/MR."
+    }
+  ],
+  "inpatient_medications": [
+    {
+      "name": "INJ. MEROMAC (Meropenem)",
+      "dosage": "1 gm",
+      "route": "IV",
+      "frequency": "TDS (1-1-1)",
+      "started": "2026-02-28",
+      "type": "Antibiotic"
+    },
+    {
+      "name": "INJ. PAN (Pantoprazole)",
+      "dosage": "40 mg",
+      "route": "IV",
+      "frequency": "OD (1-0-0)",
+      "started": "2026-02-28",
+      "type": "PPI"
+    },
+    {
+      "name": "INJ. EMESET (Ondansetron)",
+      "dosage": "4 mg",
+      "route": "IV",
+      "frequency": "TDS (1-1-1)",
+      "started": "2026-02-28",
+      "type": "Antiemetic"
+    },
+    {
+      "name": "INJ. SUMOL / paracetamol",
+      "dosage": "1 gm",
+      "route": "IV",
+      "frequency": "SOS",
+      "started": "2026-02-28",
+      "type": "Antipyretic"
+    },
+    {
+      "name": "INJ. HAPPYNERVE PLUS",
+      "dosage": "1 ampoule",
+      "route": "IV",
+      "frequency": "OD (0-1-0)",
+      "started": "2026-02-28",
+      "type": "Multivitamin"
+    },
+    {
+      "name": "INJ. H. ACTRAPID (Soluble Insulin)",
+      "dosage": "Sliding scale (10 units to 22 units based on GRBS)",
+      "route": "SC",
+      "frequency": "TDS before meals",
+      "started": "2026-02-28",
+      "type": "Diabetic Control"
+    },
+    {
+      "name": "INJ. LANTUS (Glargine Insulin)",
+      "dosage": "10-12 units",
+      "route": "SC",
+      "frequency": "OD at 2:00 PM",
+      "started": "2026-02-28",
+      "type": "Long-acting Insulin"
+    }
+  ],
+  "discharge_medications": [
+    {
+      "name": "TAB. RACIPER",
+      "dosage": "40 mg",
+      "frequency": "1-0-0",
+      "duration": "7 Days",
+      "timing": "Before food",
+      "status": "Continued from admission (IV transitioned to oral)",
+      "reason": "Gastric protection / PPI"
+    },
+    {
+      "name": "TAB. EMESET",
+      "dosage": "4 mg",
+      "frequency": "1-1-1",
+      "duration": "3 Days",
+      "timing": "",
+      "status": "Continued from admission (IV transitioned to oral)",
+      "reason": "Anti-nausea"
+    },
+    {
+      "name": "TAB. OFLOX TZ",
+      "dosage": "[MISSING]",
+      "frequency": "1-0-1",
+      "duration": "5 Days",
+      "timing": "",
+      "status": "Added upon discharge",
+      "reason": "Treatment of Urinary Tract Infection / Colitis"
+    },
+    {
+      "name": "TAB M STRONG",
+      "dosage": "[MISSING]",
+      "frequency": "1-0-0",
+      "duration": "15 Days",
+      "timing": "",
+      "status": "Added upon discharge",
+      "reason": "Multivitamin supplementation"
+    },
+    {
+      "name": "TAB. ZEDOTT",
+      "dosage": "[MISSING]",
+      "frequency": "1-1-1",
+      "duration": "3 Days",
+      "timing": "",
+      "status": "Added upon discharge",
+      "reason": "Antidiarrheal"
+    },
+    {
+      "name": "TAB. ENTR(",
+      "dosage": "[MISSING]",
+      "frequency": "1-0-1",
+      "duration": "3 Days",
+      "timing": "",
+      "status": "Added upon discharge (TRUNCATED NAME - FLAG FOR CLINICIAN)",
+      "reason": "[UNKNOWN due to truncated name]"
+    },
+    {
+      "name": "TAB. MEFTAL SPAS",
+      "dosage": "[MISSING]",
+      "frequency": "1 tab SOS",
+      "duration": "4 Tablets total",
+      "timing": "",
+      "status": "Added upon discharge",
+      "reason": "Abdominal pain/spasm control"
+    },
+    {
+      "name": "TAB. LOPIRAMIDE",
+      "dosage": "2 mg",
+      "frequency": "1-0-1",
+      "duration": "5 Days",
+      "timing": "",
+      "status": "Added upon discharge",
+      "reason": "Antidiarrheal"
+    }
+  ],
+  "reconciliation_flags": [
+    {
+      "severity": "CRITICAL",
+      "type": "OMISSION",
+      "item": "Diabetes Management (Insulin Actrapid & Lantus)",
+      "description": "Patient treated extensively for Diabetic Ketoacidosis (DKA) and uncontrolled Type 2 Diabetes with sliding scale Soluble Insulin (Actrapid) and long-acting Glargine Insulin (Lantus). However, absolutely zero diabetes control medications are included in the discharge prescription, creating an immediate, severe risk of relapse into DKA."
+    },
+    {
+      "severity": "HIGH",
+      "type": "TRUNCATED_RECORD",
+      "item": "TAB. ENTR(",
+      "description": "Item 6 in the discharge advice list is incomplete and cut off as 'TAB. ENTR('. Drug name and dosage are ambiguous. Must be flagged and verified before compounding or administration."
+    },
+    {
+      "severity": "MEDIUM",
+      "type": "HISTORY_CONFLICT",
+      "item": "Past History: Thyroid vs Diabetes",
+      "description": "The discharge overview notes past history of 'Thyroid disorder on treatment'. However, the admission case file (Page 46) and HDU/ICU reports document 'T2DM on Ayurvedic medication' with a severely high HbA1c of 13.9%, and make no mention of a thyroid disorder. This discrepancy must be flagged for clinician resolution."
+    }
+  ],
+  "laboratory_results": [
+    {
+      "date": "2026-02-27",
+      "test": "Serum Sodium",
+      "value": "127.00 mmol/L",
+      "reference_range": "135 - 150 mmol/L",
+      "interpretation": "Hyponatremia"
+    },
+    {
+      "date": "2026-02-27",
+      "test": "Random Blood Sugar (RBS)",
+      "value": "496.00 mg/dL",
+      "reference_range": "80 - 140 mg/dL",
+      "interpretation": "Severe hyperglycemia"
+    },
+    {
+      "date": "2026-02-27",
+      "test": "Urine Albumin",
+      "value": "Present +",
+      "reference_range": "Absent",
+      "interpretation": "Proteinuria"
+    },
+    {
+      "date": "2026-02-27",
+      "test": "Urine Sugar",
+      "value": "Present 1.5%",
+      "reference_range": "Absent",
+      "interpretation": "Glycosuria"
+    },
+    {
+      "date": "2026-02-27",
+      "test": "Urine Ketone Bodies",
+      "value": "Present +",
+      "reference_range": "Absent",
+      "interpretation": "Ketonuria (evidence of DKA)"
+    },
+    {
+      "date": "2026-02-27",
+      "test": "Arterial Blood Gas (ABG) Lactate",
+      "value": "0.80 mmol/L",
+      "reference_range": "0.3 - 2.0 mmol/L",
+      "interpretation": "Normal lactate"
+    },
+    {
+      "date": "2026-02-27",
+      "test": "Arterial Blood Gas (ABG) pH",
+      "value": "7.39",
+      "reference_range": "7.35 - 7.45",
+      "interpretation": "Normal pH"
+    }
+  ],
+  "follow_up_instructions": {
+    "stated": [
+      "Review immediately in case of fever, loose stools, vomiting, fatigue.",
+      "Review on 09.03.2026 with CBC."
+    ],
+    "pending_results": [
+      "Urine culture and sensitivity report sent - report awaited."
+    ]
+  }
+}

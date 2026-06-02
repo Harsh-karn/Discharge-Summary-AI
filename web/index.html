@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dscribe Clinical Agent Workspace</title>
+  
+  <!-- Modern Typography and Premium Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="header-branding">
+      <div class="logo-box">
+        <i class="fa-solid fa-stethoscope logo-icon"></i>
+      </div>
+      <div class="branding-text">
+        <h1>Dscribe</h1>
+        <span class="sub-title">Clinical Summarization Agent & Learning Workspace</span>
+      </div>
+    </div>
+    <div class="header-status">
+      <div class="status-badge online">
+        <span class="ping-circle"></span>
+        <i class="fa-solid fa-robot"></i> Agent System: Active
+      </div>
+      <button class="reset-db-btn" id="reset-memory-btn" title="Reset doctor feedback database to baseline mode">
+        <i class="fa-solid fa-arrows-rotate"></i> Reset Feedback
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Grid Layout -->
+  <div class="workspace-container">
+    
+    <!-- Sidebar: Patient Selection & Files -->
+    <aside class="workspace-sidebar">
+      <div class="sidebar-section">
+        <h3><i class="fa-solid fa-hospital-user"></i> Source Patients</h3>
+        <div class="patient-list">
+          <div class="patient-card active" id="patient-card-2">
+            <div class="patient-avatar">JD</div>
+            <div class="patient-info">
+              <h4>Jane Doe (Patient 2)</h4>
+              <span>MRN-998241 · Female</span>
+            </div>
+            <span class="active-dot"></span>
+          </div>
+          
+          <div class="patient-card disabled" title="Available in future clinical updates">
+            <div class="patient-avatar text-muted">??</div>
+            <div class="patient-info">
+              <h4 class="text-muted">Inpatient Note 1</h4>
+              <span>Sample Baseline Case</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3><i class="fa-solid fa-file-pdf"></i> Ingested Source files</h3>
+        <div class="source-files-list">
+          <div class="file-item active">
+            <i class="fa-solid fa-file-medical file-pdf-icon"></i>
+            <div class="file-details">
+              <span>patient 2 (1).pdf</span>
+              <small>71 Pages · Scanned Charts</small>
+            </div>
+          </div>
+          <div class="file-item disabled">
+            <i class="fa-solid fa-file-invoice-dollar file-pdf-icon"></i>
+            <div class="file-details">
+              <span>Discharge_Summary_Brief.pdf</span>
+              <small>4 Pages · Assignment Brief</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="evaluation-watermark">
+          <i class="fa-solid fa-shield-halved"></i> No-Fabrication Mode On
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Content Area -->
+    <main class="workspace-content">
+      
+      <!-- Top Row: Patient Demographics & Adm Strip -->
+      <section class="demographics-strip glass-card" id="demographics-strip">
+        <div class="strip-item">
+          <span class="strip-label"><i class="fa-solid fa-address-card"></i> Patient Name</span>
+          <span class="strip-value" id="demo-name">Jane Doe</span>
+        </div>
+        <div class="strip-item">
+          <span class="strip-label"><i class="fa-solid fa-cake-candles"></i> Age / Gender</span>
+          <span class="strip-value" id="demo-age-gender">54 Yrs · Female</span>
+        </div>
+        <div class="strip-item">
+          <span class="strip-label"><i class="fa-solid fa-weight-hanging"></i> Admission Weight</span>
+          <span class="strip-value" id="demo-weight">71 kg</span>
+        </div>
+        <div class="strip-item">
+          <span class="strip-label"><i class="fa-solid fa-calendar-days"></i> Hospital Dates</span>
+          <span class="strip-value" id="demo-dates">2026-02-26 to 2026-03-02</span>
+        </div>
+        <div class="strip-item fill-span">
+          <span class="strip-label"><i class="fa-solid fa-history"></i> Stated History (Discharge Note)</span>
+          <span class="strip-value history-conflict-text" id="demo-history">K/C/O Thyroid disorder on treatment.</span>
+        </div>
+      </section>
+
+      <!-- Three-Column Column Grid -->
+      <div class="columns-grid">
+        
+        <!-- Column A: Live Agent Step Trace Timeline -->
+        <section class="grid-col col-trace glass-card">
+          <div class="col-header">
+            <h2><i class="fa-solid fa-terminal text-primary"></i> Agent reasoning Console</h2>
+            <button class="run-agent-btn" id="run-agent-btn">
+              <i class="fa-solid fa-play"></i> Run Agent
+            </button>
+          </div>
+          
+          <div class="console-body" id="console-body">
+            <div class="empty-state" id="console-empty-state">
+              <div class="empty-icon"><i class="fa-solid fa-circle-nodes text-muted"></i></div>
+              <h3>Ready to Summarize</h3>
+              <p>Click "Run Agent" to launch the from-scratch reasoning loop on patient 2 (1).pdf.</p>
+            </div>
+            <div class="trace-timeline" id="trace-timeline" style="display:none;">
+              <!-- Timeline nodes are dynamically rendered here -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Column B: Generated Discharge Summary Draft -->
+        <section class="grid-col col-draft glass-card">
+          <div class="col-header">
+            <h2><i class="fa-solid fa-file-lines text-success"></i> Structured Discharge Draft</h2>
+            <div class="draft-badge" id="learning-badge">Baseline Draft</div>
+          </div>
+          
+          <div class="draft-body" id="draft-body">
+            <div class="empty-state" id="draft-empty-state">
+              <div class="empty-icon"><i class="fa-solid fa-file-shield text-muted"></i></div>
+              <h3>Draft Draft Pending</h3>
+              <p>The structured discharge summary draft will generate here after the agent completes verification.</p>
+            </div>
+            
+            <form class="draft-form" id="draft-form" style="display:none;" onsubmit="event.preventDefault();">
+              <div class="form-row">
+                <div class="form-group half">
+                  <label>Principal Discharge Diagnosis</label>
+                  <input type="text" id="draft-principal-diag" class="editable-input">
+                </div>
+                <div class="form-group half">
+                  <label>Admission Date</label>
+                  <input type="text" id="draft-adm-date" class="editable-input" readonly>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Secondary / Omitted Diagnoses</label>
+                <div class="diagnosis-tags" id="draft-secondary-tags">
+                  <!-- Tag elements -->
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Hospital Course Summary</label>
+                <textarea id="draft-course" rows="6" class="editable-input"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>Key Procedures Done</label>
+                <div class="procedure-list" id="draft-procedures">
+                  <!-- Procedure badges -->
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Discharge Medications & Clinical Advice</label>
+                <div class="meds-table-container">
+                  <table class="meds-table">
+                    <thead>
+                      <tr>
+                        <th>Medication Name</th>
+                        <th>Dosage</th>
+                        <th>Schedule</th>
+                        <th>Duration</th>
+                        <th>Action / Indication</th>
+                      </tr>
+                    </thead>
+                    <tbody id="draft-meds-body">
+                      <!-- Med rows -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group half">
+                  <label>Known Allergies</label>
+                  <input type="text" id="draft-allergies" class="editable-input" readonly>
+                </div>
+                <div class="form-group half">
+                  <label>Pending Results</label>
+                  <input type="text" id="draft-pending" class="editable-input" readonly>
+                </div>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- Column C: Safety Center & Doctor Learning Loop -->
+        <section class="grid-col col-safety">
+          
+          <!-- Box C1: Safety Alerts Log -->
+          <div class="safety-alerts-box glass-card">
+            <h3><i class="fa-solid fa-triangle-exclamation text-danger"></i> Safety & Refusal Center</h3>
+            <div class="alerts-log" id="alerts-log">
+              <div class="empty-state-small">
+                <i class="fa-solid fa-shield-heart text-muted"></i>
+                <p>No active anomalies evaluated yet.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Box C2: Clinician Review & Feedback Loop Simulator -->
+          <div class="feedback-simulator-box glass-card">
+            <h3><i class="fa-solid fa-user-doctor text-info"></i> Clinician feedback loop (Part 2)</h3>
+            
+            <div class="simulator-body" id="feedback-simulator-body">
+              <p class="section-intro">Simulate the clinician's review. Edit fields below to submit corrections to the agent's memory and prove Part 2 dynamic improvement.</p>
+              
+              <div class="simulation-form">
+                <div class="sim-group">
+                  <label>Resolve Drug Name Mismatch (Item 6):</label>
+                  <select id="sim-entr-select">
+                    <option value="TAB. ENTR(" selected>Keep Ambiguous/Truncated [TAB. ENTR(]</option>
+                    <option value="TAB. ENTEROGERMINA">Correct to "TAB. ENTEROGERMINA" (Probiotic)</option>
+                    <option value="TAB. ENTROFLORA">Correct to "TAB. ENTROFLORA" (Probiotic)</option>
+                  </select>
+                </div>
+                
+                <div class="sim-group checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="sim-add-insulin">
+                    <span><strong>Correct Omission:</strong> Restore insulin Glargine (Lantus) to discharge medications.</span>
+                  </label>
+                </div>
+                
+                <div class="sim-insulin-inputs" id="sim-insulin-details" style="display:none;">
+                  <div class="sim-row">
+                    <div class="sim-half">
+                      <label>Drug Name</label>
+                      <input type="text" id="sim-insulin-name" value="INJ. LANTUS (Glargine)">
+                    </div>
+                    <div class="sim-half">
+                      <label>Dosage / Schedule</label>
+                      <input type="text" id="sim-insulin-dosage" value="10 units SC OD at night">
+                    </div>
+                  </div>
+                </div>
+
+                <button class="submit-feedback-btn" id="submit-feedback-btn" disabled>
+                  <i class="fa-solid fa-paper-plane"></i> Submit Clinical Edits
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Box C3: Continuous Learning Performance Graph -->
+          <div class="learning-chart-box glass-card">
+            <h3><i class="fa-solid fa-chart-line text-warning"></i> Clinician Edit Burden Reduction</h3>
+            <div class="chart-container">
+              <div class="chart-y-axis">
+                <span>100% (High)</span>
+                <span>50%</span>
+                <span>0% (Perfect)</span>
+              </div>
+              <div class="chart-graph">
+                <!-- Grid Lines -->
+                <div class="grid-line line-100"></div>
+                <div class="grid-line line-50"></div>
+                
+                <!-- Chart Line & Dots -->
+                <svg class="chart-svg" viewBox="0 0 100 40" id="chart-svg">
+                  <!-- Dynamic SVG elements -->
+                  <path d="M 10 35 L 50 35 L 90 35" fill="none" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1" />
+                </svg>
+                
+                <!-- Performance Dots (HTML absolute) -->
+                <div class="chart-dot dot-1" id="dot-iter-1" data-label="Iter 1 (Baseline)">
+                  <span class="tooltip">Baseline: 100% Edit Burden (Diabetes omitted, Drug truncated)</span>
+                </div>
+                <div class="chart-dot dot-2 locked" id="dot-iter-2" data-label="Iter 2 (Learned)">
+                  <span class="tooltip">Iteration 2: Pending clinician review...</span>
+                </div>
+              </div>
+              <div class="chart-x-axis">
+                <span>Baseline (Iter 1)</span>
+                <span>Learned Loop (Iter 2)</span>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+      
+    </main>
+
+  </div>
+
+  <!-- Fullscreen Loading Spinner Overlay -->
+  <div class="loader-overlay" id="loader-overlay" style="display:none;">
+    <div class="loader-content">
+      <div class="medical-pulse-spinner">
+        <i class="fa-solid fa-heart-pulse heartbeat-icon"></i>
+      </div>
+      <h2>Running Clinical Summarizer Loop</h2>
+      <p id="loader-status">Step 1: Planning ingestion cycle...</p>
+    </div>
+  </div>
+
+  <!-- Success Notification -->
+  <div class="toast-notification" id="toast-notification">
+    <i class="fa-solid fa-circle-check"></i> <span id="toast-message">Database synchronized successfully!</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
