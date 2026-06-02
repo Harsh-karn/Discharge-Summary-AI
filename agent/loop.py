@@ -20,6 +20,16 @@ class ClinicalAgentLoop:
         self.workspace_dir = workspace_dir
         self.step_cap = step_cap
         
+        # Load from .env file if it exists (Zero-dependency approach)
+        env_path = os.path.join(self.workspace_dir, ".env")
+        if os.path.exists(env_path):
+            with open(env_path, "r") as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#") and "=" in line:
+                        key, val = line.split("=", 1)
+                        os.environ[key.strip()] = val.strip().strip('"').strip("'")
+                        
         # We need the API key from environment
         self.api_key = os.environ.get("GEMINI_API_KEY")
         if self.api_key and genai:

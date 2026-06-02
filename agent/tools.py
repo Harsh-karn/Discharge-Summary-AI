@@ -1,28 +1,27 @@
 import os
 import json
+from agent.parser import ClinicalPDFParser
 
 def get_patient_record(pdf_path: str) -> dict:
     """
     Reads the patient's source records and extracts structured raw data including demographics, diagnoses, past medical history, and medications.
-    This simulates parsing the complex OCR and programmatic layers of the clinical PDFs.
+    This parses the complex OCR and programmatic layers of the clinical PDFs using Gemini.
     
     Args:
         pdf_path: The file path to the patient's PDF record.
     """
     print(f"[TOOL-CALL] get_patient_record for {pdf_path}")
     workspace_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    data_dir = os.path.join(workspace_dir, "data")
     
-    # We use the pre-extracted OCR data for patient 2
-    if "patient 2" in pdf_path.lower() or "patient_2" in pdf_path.lower():
-        json_fallback_path = os.path.join(data_dir, "patient_2_extracted.json")
-        if os.path.exists(json_fallback_path):
-            with open(json_fallback_path, "r") as f:
-                return json.load(f)
-    
-    return {
-        "error": "Failed to parse document or document not found."
-    }
+    parser = ClinicalPDFParser(workspace_dir)
+    try:
+        record = parser.parse_patient_file(pdf_path)
+        return record
+    except Exception as e:
+        print(f"[TOOL-CALL] Error in get_patient_record: {str(e)}")
+        return {
+            "error": f"Failed to parse document or document not found: {str(e)}"
+        }
 
 def check_drug_interactions(medications: list) -> list:
     """
