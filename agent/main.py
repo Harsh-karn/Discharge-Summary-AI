@@ -1,5 +1,6 @@
 import os
 import json
+import base64
 import urllib.parse
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from agent.loop import ClinicalAgentLoop
@@ -106,6 +107,36 @@ class ClinicalAgentAPIHandler(SimpleHTTPRequestHandler):
                     "corrections": memory_data
                 }).encode("utf-8"))
                 
+            except Exception as e:
+                self._set_headers(status=500)
+                self.wfile.write(json.dumps({"status": "ERROR", "message": str(e)}).encode("utf-8"))
+                
+        # 3. API: UPLOAD PATIENT DOCUMENT
+        elif parsed_path.path == "/api/upload":
+            try:
+                data = json.loads(post_data) if post_data else {}
+                filename = data.get("filename")
+                content_base64 = data.get("content_base64")
+                
+                if not filename or not content_base64:
+                    raise ValueError("Filename or content_base64 missing.")
+                
+                # Base64 content from FileReader often looks like 'data:application/pdf;base64,JVBERi0xLjQK...'
+                if "," in content_base64:
+                    content_base64 = content_base64.split(",", 1)[1]
+                    
+                file_bytes = base64.b64decode(content_base64)
+                
+                # Save the uploaded file in workspace
+                save_path = os.path.join(workspace_dir, filename)
+                with open(save_path, "wb") as f:
+                    f.write(file_bytes)
+                    
+                self._set_headers()
+                self.wfile.write(json.dumps({
+                    "status": "SUCCESS", 
+                    "message": f"Uploaded {filename}"
+                }).encode("utf-8"))
             except Exception as e:
                 self._set_headers(status=500)
                 self.wfile.write(json.dumps({"status": "ERROR", "message": str(e)}).encode("utf-8"))

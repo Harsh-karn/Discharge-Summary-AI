@@ -20,6 +20,11 @@ const submitFeedbackBtn = document.getElementById("submit-feedback-btn");
 const toast = document.getElementById("toast-notification");
 const toastMessage = document.getElementById("toast-message");
 
+// Upload Elements
+const uploadTriggerBtn = document.getElementById("upload-trigger-btn");
+const patientFileUpload = document.getElementById("patient-file-upload");
+const sourceFilesList = document.getElementById("source-files-list");
+
 // Feedback Simulator Inputs
 const simEntrSelect = document.getElementById("sim-entr-select");
 const simAddInsulin = document.getElementById("sim-add-insulin");
@@ -36,6 +41,7 @@ const chartSvg = document.getElementById("chart-svg");
 let currentDraft = null;
 let memorySaved = false;
 let isFirstRun = true;
+let activePdfName = "patient 2 (1).pdf";
 
 // Initialize Application
 document.addEventListener("DOMContentLoaded", () => {
@@ -54,6 +60,12 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Initialize Chart Base SVG Line
   updateBurdenGraph(100, null);
+
+  // File upload logic
+  if(uploadTriggerBtn && patientFileUpload) {
+    uploadTriggerBtn.addEventListener("click", () => patientFileUpload.click());
+    patientFileUpload.addEventListener("change", handlePatientFileUpload);
+  }
 });
 
 // Activate submit button only if corrections are configured
@@ -135,7 +147,8 @@ async function runAgentPipeline() {
   try {
     const response = await fetch(`${API_BASE}/run_agent`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pdf_name: activePdfName })
     });
     
     if (!response.ok) throw new Error("Agent failed to respond.");
@@ -456,6 +469,66 @@ function updateBurdenGraph(burden1, burden2) {
       <path d="${pathD}" fill="none" stroke="url(#chart-grad)" stroke-width="3" id="svg-path" />
     `;
   }
+}
+
+// ==========================================================================
+// UPLOAD LOGIC
+// ==========================================================================
+async function handlePatientFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const base64Data = e.target.result;
+    
+    showToast("Uploading patient data...", true);
+    
+    try {
+      const response = await fetch(`${API_BASE}/upload`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          filename: file.name,
+          content_base64: base64Data
+        })
+      });
+      
+      const result = await response.json();
+      if (result.status === "SUCCESS") {
+        showToast("Upload successful! Preparing analysis...", true);
+        
+        activePdfName = file.name;
+        
+        // Update sidebar UI
+        document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+        
+        const newFileEl = document.createElement('div');
+        newFileEl.className = 'file-item active';
+        newFileEl.innerHTML = `
+          <i class="fa-solid fa-file-medical file-pdf-icon"></i>
+          <div class="file-details">
+            <span>${file.name}</span>
+            <small>Uploaded Patient File</small>
+          </div>
+        `;
+        sourceFilesList.prepend(newFileEl);
+        
+        // Reset state for new file
+        isFirstRun = true;
+        memorySaved = false;
+        
+        // Auto-run the agent on the new file
+        runAgentPipeline();
+      } else {
+        showToast("Upload failed: " + result.message, false);
+      }
+    } catch (error) {
+      showToast("Server offline. Cannot upload file.", false);
+    }
+  };
+  
+  reader.readAsDataURL(file);
 }
 
 // ==========================================================================

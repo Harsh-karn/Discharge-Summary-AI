@@ -65,8 +65,8 @@
       
       <div class="sidebar-section">
         <h3><i class="fa-solid fa-file-pdf"></i> Ingested Source files</h3>
-        <div class="source-files-list">
-          <div class="file-item active">
+        <div class="source-files-list" id="source-files-list">
+          <div class="file-item active" id="default-file-item">
             <i class="fa-solid fa-file-medical file-pdf-icon"></i>
             <div class="file-details">
               <span>patient 2 (1).pdf</span>
@@ -79,7 +79,13 @@
               <span>Discharge_Summary_Brief.pdf</span>
               <small>4 Pages · Assignment Brief</small>
             </div>
-          </div>
+        </div>
+
+        <div class="upload-section" style="margin-top: 15px;">
+          <input type="file" id="patient-file-upload" accept=".pdf" style="display:none;" />
+          <button id="upload-trigger-btn" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px dashed var(--color-primary); background: rgba(0, 163, 255, 0.05); color: var(--color-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-family: inherit; transition: all 0.2s;">
+            <i class="fa-solid fa-file-arrow-up"></i> Upload PDF Data
+          </button>
         </div>
       </div>
 
