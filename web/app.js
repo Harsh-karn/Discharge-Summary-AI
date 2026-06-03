@@ -538,8 +538,12 @@ function simulateOfflineAgent() {
   setTimeout(async () => {
     loaderOverlay.style.display = "none";
     
+    let dataFile = "../data/patient_2_extracted.json";
+    if (activePdfName.toLowerCase().includes("psychiatric")) {
+      dataFile = "../data/psychiatric_patient_extracted.json";
+    }
     // Load local high-fidelity JSON data directly client-side
-    const localData = await fetch("../data/patient_2_extracted.json").then(r => r.json()).catch(() => null);
+    const localData = await fetch(dataFile).then(r => r.json()).catch(() => null);
     
     if (!localData) {
       showToast("Fidelity database missing in workspace. Generate via main.py server.", false);
@@ -595,13 +599,13 @@ function simulateOfflineAgent() {
       "pending_results": localData.follow_up_instructions.pending_results,
       "discharge_condition": localData.hospital_course ? localData.hospital_course.discharge_condition : "Stable",
       "reconciliation_flags": finalFlags,
-      "interaction_alerts": memorySaved ? [] : [
+      "interaction_alerts": (memorySaved || activePdfName.toLowerCase().includes("psychiatric")) ? [] : [
         {
           "interaction": "Ofloxacin TZ + Loperamide (Bacterial Colitis Warning)",
           "description": "Patient has colitis noted on USG and is prescribed Oflox TZ alongside Loperamide. Antimotility agents are contraindicated in active inflammatory colitis. Clinician review advised."
         }
       ],
-      "history_conflict_flag": true,
+      "history_conflict_flag": activePdfName.toLowerCase().includes("psychiatric") ? false : true,
       "past_history_stated": localData.past_medical_history.stated_on_discharge_sheet
     };
     
@@ -628,7 +632,7 @@ function simulateOfflineAgent() {
         "name": "HISTORY_VALIDATION",
         "reasoning": "Cross-referencing admission sheets vs discharge summaries for medical history consistency.",
         "tool_chosen": "None (Internal Diagnostic Reconciliation)",
-        "result": "ALERT: Mismatch detected! Discharge summary claims 'Thyroid disorder', but admission sheets record 'T2DM on Ayurvedic medication' (HbA1c - 13.9%). Flagging for review.",
+        "result": activePdfName.toLowerCase().includes("psychiatric") ? "No medical history conflicts detected between admission and discharge." : "ALERT: Mismatch detected! Discharge summary claims 'Thyroid disorder', but admission sheets record 'T2DM on Ayurvedic medication' (HbA1c - 13.9%). Flagging for review.",
         "next_decision": "Check medication records and reconcile drugs."
       },
       {
@@ -636,7 +640,7 @@ function simulateOfflineAgent() {
         "name": "MEDICATION_RECONCILIATION",
         "reasoning": "Comparing active hospital treatments (ICU charts, drug charts) vs final discharge medication advice.",
         "tool_chosen": "None (Internal Med Reconciliation)",
-        "result": memorySaved ? "Dynamic memory resolved medication omissions and drug truncations out-of-the-box." : "Detected 2 clinical reconciliation alerts. Critical omission: Diabetes insulin medications.",
+        "result": activePdfName.toLowerCase().includes("psychiatric") ? "Medication schedules are perfectly aligned. No omissions found." : (memorySaved ? "Dynamic memory resolved medication omissions and drug truncations out-of-the-box." : "Detected 2 clinical reconciliation alerts. Critical omission: Diabetes insulin medications."),
         "next_decision": "Call mock tools to check for pharmacological safety and interactions."
       },
       {
@@ -644,7 +648,7 @@ function simulateOfflineAgent() {
         "name": "PHARMACOLOGICAL_INTERACTION_CHECK",
         "reasoning": "Submitting discharge prescriptions to pharmacological database lookup to check for adverse events.",
         "tool_chosen": "ClinicalTools.drug_interaction_lookup",
-        "result": memorySaved ? "Warnings cleared. Probiotic and Glargine insulin restored." : "Tool returned 1 alert. Warning: Loperamide contraindicated in bacterial colitis.",
+        "result": activePdfName.toLowerCase().includes("psychiatric") ? "Safety Check Passed: 0 alerts returned for this combination." : (memorySaved ? "Warnings cleared. Probiotic and Glargine insulin restored." : "Tool returned 1 alert. Warning: Loperamide contraindicated in bacterial colitis."),
         "next_decision": "Integrate clinical corrections memory to check for doctor's preferences."
       },
       {

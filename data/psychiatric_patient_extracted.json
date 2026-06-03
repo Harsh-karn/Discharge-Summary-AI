@@ -1,0 +1,132 @@
+{
+  "patient_id": "1000010659260",
+  "metadata": {
+    "total_pages": 4,
+    "ingested_date": "2015-05-05"
+  },
+  "demographics": {
+    "name": "January Jones",
+    "age": "[MISSING]",
+    "gender": "[MISSING]",
+    "weight": "[MISSING]",
+    "mrn": "1000010659260"
+  },
+  "dates": {
+    "admission_date": "2015-04-30",
+    "discharge_date": "2015-05-05"
+  },
+  "diagnoses": {
+    "stated_discharge_diagnoses": [
+      "Bipolar disorder, current episode manic severe with psychotic features, F31.2 (Active)",
+      "Essential (primary) hypertension, I10 (Active)",
+      "Hypothyroidism, unspecified, E03.9 (Active)"
+    ],
+    "unclassified_or_omitted_diagnoses": []
+  },
+  "past_medical_history": {
+    "stated_on_discharge_sheet": "No history of suicidal attempts. No history of adverse drug reactions.",
+    "stated_on_admission_sheet": "[MISSING]",
+    "conflict_detected": false
+  },
+  "admission_vitals": {
+    "pulse": "[MISSING]",
+    "bp": "[MISSING]",
+    "temp": "[MISSING]",
+    "rr": "[MISSING]",
+    "spo2": "[MISSING]",
+    "grbs": "90 mg/dL"
+  },
+  "hospital_course": {
+    "er_management": "[MISSING]",
+    "inpatient_treatment": "Patient initially presented without sleeping for >72 hours with psychotic features. Maintained compliance with medications. Sleep patterns improved to 7 hours. Manic symptoms resolved rapidly. Mood stabilized.",
+    "discharge_condition": "Greatly improved"
+  },
+  "procedures": [
+    {
+      "procedure": "Mental Status Exam",
+      "date": "2015-05-05",
+      "findings": "Calm, attentive, casual grooming. Speech normal rate/volume. Mood normal, affect congruent. No hallucinations or delusions. Judgment intact."
+    }
+  ],
+  "inpatient_medications": [],
+  "discharge_medications": [
+    {
+      "name": "Depakote ER",
+      "dosage": "1500 mg",
+      "frequency": "QPM",
+      "duration": "1 Month",
+      "status": "Active",
+      "reason": "Mood Stabilization"
+    },
+    {
+      "name": "Zyprexa",
+      "dosage": "10 mg",
+      "frequency": "QAM",
+      "duration": "1 Month",
+      "status": "Active",
+      "reason": "Psychosis"
+    },
+    {
+      "name": "Dyazide",
+      "dosage": "37.5 / 25 mg",
+      "frequency": "BID",
+      "duration": "1 Month",
+      "status": "Active",
+      "reason": "Hypertension"
+    },
+    {
+      "name": "Synthroid",
+      "dosage": "150 mcg",
+      "frequency": "QAM",
+      "duration": "1 Month",
+      "status": "Active",
+      "reason": "Hypothyroidism"
+    }
+  ],
+  "reconciliation_flags": [
+    {
+      "severity": "MEDIUM",
+      "type": "LAB_ABNORMALITY",
+      "item": "Urine Drug Screen: Cocaine Positive",
+      "description": "Patient tested positive for Cocaine on admission (5/1/2015). Flagging for outpatient behavioral monitoring."
+    }
+  ],
+  "laboratory_results": [
+    {
+      "date": "2015-05-01",
+      "test": "BUN",
+      "value": "18 mg/dl",
+      "reference_range": "7-21mg/dl",
+      "interpretation": "Normal"
+    },
+    {
+      "date": "2015-05-01",
+      "test": "Creatinine",
+      "value": "0.7 mg/dl",
+      "reference_range": "[MISSING]",
+      "interpretation": "Normal"
+    },
+    {
+      "date": "2015-05-01",
+      "test": "Glucose, Fasting",
+      "value": "90 mg/dL",
+      "reference_range": "70-100 mg/dl",
+      "interpretation": "Normal"
+    },
+    {
+      "date": "2015-05-01",
+      "test": "Urine Drug Screen",
+      "value": "Cocaine: Positive",
+      "reference_range": "Negative",
+      "interpretation": "Abnormal"
+    }
+  ],
+  "follow_up_instructions": {
+    "stated": [
+      "Discharge to sister's care (Emergency Contact: 213-454-6677)",
+      "Attending MD will provide coverage for 1 month's prescriptions until seen by own physician.",
+      "Regular diet, no physical limitations"
+    ],
+    "pending_results": []
+  }
+}
