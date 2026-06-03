@@ -22,14 +22,14 @@ Our agentic loop is controlled by a hard iteration cap (8 steps max) to prevent 
 ```mermaid
 graph TD
     Start([Start]) --> 1_Ingestion
-    1_Ingestion[📄 1. Document Ingestion] --> 2_Identity
-    2_Identity[👤 2. Identity & Demographic Match] --> 3_CrossReference
-    3_CrossReference[⚖️ 3. Diagnostic History Cross-Reference] --> 4_Prescriptions
-    4_Prescriptions[💊 4. Prescriptions Extraction] --> 5_Reconciliation
-    5_Reconciliation[🔄 5. Medication Reconciliation] --> 6_Safety
-    6_Safety[⚠️ 6. Pharmacological Safety Verification] --> 7_Feedback
-    7_Feedback[🧠 7. Dynamic Feedback Lookup] --> 8_Compilation
-    8_Compilation[📝 8. Structured Compilation & Safety Badging] --> End([End])
+    1_Ingestion["📄 1. Document<br>Ingestion"] --> 2_Identity
+    2_Identity["👤 2. Identity &<br>Demographic Match"] --> 3_CrossReference
+    3_CrossReference["⚖️ 3. Diagnostic History<br>Cross-Reference"] --> 4_Prescriptions
+    4_Prescriptions["💊 4. Prescriptions<br>Extraction"] --> 5_Reconciliation
+    5_Reconciliation["🔄 5. Medication<br>Reconciliation"] --> 6_Safety
+    6_Safety["⚠️ 6. Pharmacological<br>Safety Verification"] --> 7_Feedback
+    7_Feedback["🧠 7. Dynamic<br>Feedback Lookup"] --> 8_Compilation
+    8_Compilation["📝 8. Structured Compilation<br>& Safety Badging"] --> End([End])
     
     style Start fill:#2ecc71,stroke:#27ae60,stroke-width:2px,color:white
     style End fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:white
